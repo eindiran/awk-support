@@ -15,23 +15,60 @@
 #    PARAMETERS:  -|PARAMETERS:EMPTY|
 #    PARAMETERS:  |PARAMETERS:FIRST| - {+DESCRIPTION+}
 #                 |PARAMETERS:ENTRY| - {+DESCRIPTION+}
-#       RETURNS:  
+#       RETURNS:
 #===============================================================================
 == Comments.file description == start, map:ch ==
 #===============================================================================
 #
-#          File:  |FILENAME|
-# 
-#   Description:  <CURSOR>
-# 
-#   VIM Version:  7.0+
-#        Author:  |AUTHOR| (|AUTHORREF|), |EMAIL|
-#  Organization:  |ORGANIZATION|
-#       Version:  1.0
-#       Created:  |DATE| |TIME|
-#      Revision:  ---
-#       License:  |COPYRIGHT|
+#          FILE:  |FILENAME|
+#
+#         USAGE: ./|FILENAME| [--help] [--version]
+#
+#   DESCRIPTION:  <CURSOR>
+#
+#       OPTIONS:
+#                 --help: Print the usage and exit
+#                 --version: Print the version and exit
+#
+#        AUTHOR:  |AUTHOR| <|EMAIL|>
+#  ORGANIZATION:  |ORGANIZATION|
+#      REVISION:  |SEMVER_REV|
+#
 #===============================================================================
+
+BEGIN {
+    PROGRAM = "|FILENAME|"
+    VERSION = "|SEMVER_REV|"
+    errno = 0
+    for (argnum = 1; argnum < ARGC; argnum++) {
+        arg = ARGV[argnum]
+        if (arg == "--help") {
+            opt_help = 1
+        } else if (arg == "--version") {
+            opt_version = 1
+        } else {
+            printf "%s: error: unknown option '%s'\n", PROGRAM, arg >"/dev/stderr"
+            exit errno = 1
+        }
+        delete ARGV[argnum]
+    }
+    if (opt_help) {
+        printf "usage: %s [--help] [--version]\n", PROGRAM
+        exit
+    }
+    if (opt_version) {
+        printf "%s v%s", PROGRAM, VERSION
+        exit
+    }
+}
+
+{
+    # main
+}
+
+END {
+    exit errno
+}
 == Comments.shebang == start, map:csh ==
 #!|AWK_INTERPRETER| -f
 == ENDTEMPLATE ==
